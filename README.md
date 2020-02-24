@@ -86,6 +86,16 @@ Label nodes:
      
 ### Helm
 
+     curl -O  https://get.helm.sh/helm-v3.1.1-linux-arm.tar.gz
+     tar -zxvf helm-v3.1.1-linux-arm.tar.gz
+     mv linux-arm/helm /usr/local/bin/helm
+     rm -rf linux-arm
+
+     helm repo add stable https://kubernetes-charts.storage.googleapis.com
+
+
+PS: Helm 3 does not need to start tiller
+
 ### OpenFaas 
 
 Installation via kubectl (only on the master node):
