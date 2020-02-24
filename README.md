@@ -13,10 +13,11 @@ Hardware Description:
 If iptables is 1.8+, switch to legacy version. Network flannel/weave still have incompabilities with the newest iptables version.
 
       sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+      sudo reboot
 Make sure ip forwarding is enabled: 
 
       sudo sysctl net.bridge.bridge-nf-call-iptables=1
-    
+      
       
 ### Kubernetes
 
@@ -93,9 +94,18 @@ Installation via kubectl (only on the master node):
     cd faas-netes
     
     kubectl apply -f ./namespaces.yml
+    
+    PASSWORD=$(head -c 12 /dev/urandom | shasum| cut -d' ' -f1)	
+    kubectl -n openfaas create secret generic basic-auth --from-literal=basic-auth-user=admin --from-literal=basic-auth-password="$PASSWORD"
+    
     kubectl apply -f ./yaml_armhf
      
 ### MinIO
+
+    kubectl create -f minio/minio-volume.yaml
+    kubectl create -f minio/minio-pvc.yaml
+    kubectl create -f minio/minio-deployment.yaml
+    kubectl create -f minio/minio-service.yaml
 
 ### Redis 
 
