@@ -4,7 +4,7 @@ Hardware Description:
 
   - RaspberryPi 4 B+ 4GB
   - RaspberryPi 3 B+
-  - OrangePi 3 aarch64 (WIP)
+  - OrangePi 3 arm64 (WIP)
   - BeagleBone Black (WIP) 
  
 ### OS 
