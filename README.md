@@ -32,15 +32,12 @@ Make sure ip forwarding is enabled:
   
     cat > /etc/docker/daemon.json <<EOF
     {
-    "exec-opts": ["native.cgroupdriver=cgroupfs"],
-    "log-driver": "json-file",
-    "log-opts": {
-    "max-size": "100m"
-    },
-    "storage-driver": "overlay2",
-    "storage-opts": [
-    "overlay2.override_kernel_check=true"
-    ]
+  	"exec-opts": ["native.cgroupdriver=systemd"],
+	"log-driver": "json-file",
+	"log-opts": {
+	    "max-size": "100m"
+	},
+	"storage-driver": "overlay2"
     }
     EOF
 
@@ -74,9 +71,11 @@ After the master starts it will print a command which should be executed on the 
     
 ##### Post-init setup 
 
-Install Flannel for netowrk management:
+Install Flannel (arm/arm64) for netowrk management (for hybrid clusters apply both files):
 
-     kubectl apply -f flannel/kube-flannel.yaml
+     kubectl apply -f flannel/kube-flannel_arm.yaml
+     
+     kubectl apply -f flannel/kube-flannel_arm64.yaml
 
 Remove taints from master node to allows pods scheduling on the master as well:
 
