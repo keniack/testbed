@@ -16,6 +16,9 @@ spec:
       containers:
       - name: telemd
         image: edgerun/telemd:latest
+        env:
+        - name: telemd_redis_host
+          value: 10.109.167.109
 ---
 apiVersion: v1
 kind: Service
