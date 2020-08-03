@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemd
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemd
+  template:
+    metadata:
+      labels:
+        app: telemd
+    spec:
+      containers:
+      - name: telemd
+        image: edgerun/telemd:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemd-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    telemd: monitor
+  ports:
+  - port: 8888
+    targetPort: 8888
+    nodePort: 30001
