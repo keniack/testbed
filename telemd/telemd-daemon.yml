@@ -21,6 +21,10 @@ spec:
       containers:
       - name: telemd
         image: edgerun/telemd:latest
+        securityContext:
+          privileged: false
+          capabilities:
+            add: ["NET_ADMIN"]
         env:
         - name: telemd_redis_host
           value: 10.109.167.109
@@ -38,6 +42,9 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
+        - name: netdevattributes
+          mountPath: /sys/class/net
+          readOnly: true
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
@@ -46,3 +53,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: netdevattributes
+        hostPath:
+          path: /sys/class/net
