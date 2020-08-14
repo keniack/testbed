@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skippy-network
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skippy-network
+  template:
+    metadata:
+      labels:
+        app: skippy-network
+    spec:
+      containers:
+      - name: skippy-network
+        image: keniack/skippy-network:latest
+        ports:
+        - containerPort: 5002
+        env:
+        - name: redis_host
+          value: 10.96.24.180
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skippy-network-lb
+  namespace: default
+  labels:
+    app: skippy-network
+spec:
+  type: NodePort
+  selector:
+    role: master
+  ports:
+  - port: 5002
+    targetPort: 5002
+
