@@ -20,7 +20,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: telemd
-        image: edgerun/telemd:latest
+        image: keniack/telemd:latest
         securityContext:
           privileged: false
           capabilities:
