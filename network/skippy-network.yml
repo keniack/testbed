@@ -13,9 +13,11 @@ spec:
       labels:
         app: skippy-network
     spec:
+      nodeSelector:
       containers:
       - name: skippy-network
         image: keniack/skippy-network:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5002
         env:
@@ -25,7 +27,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: skippy-network-lb
+  name: skippy-network
   namespace: default
   labels:
     app: skippy-network
@@ -33,7 +35,8 @@ spec:
   type: NodePort
   selector:
     role: master
+    app: skippy-network
   ports:
   - port: 5002
     targetPort: 5002
-
+    nodePort: 31501
