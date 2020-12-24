@@ -22,7 +22,7 @@ spec:
         - containerPort: 5002
         env:
         - name: redis_host
-          value: 10.96.24.180
+          value: 10.244.0.9
 ---
 apiVersion: v1
 kind: Service

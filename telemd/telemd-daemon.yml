@@ -20,14 +20,15 @@ spec:
         effect: NoSchedule
       containers:
       - name: telemd
-        image: keniack/telemd:latest
+        image: keniack/telemd:0.2
+        imagePullPolicy: Always
         securityContext:
           privileged: false
           capabilities:
             add: ["NET_ADMIN"]
         env:
         - name: telemd_redis_host
-          value: 10.109.167.109
+          value: 10.244.0.9
         - name: POD_NAME
           valueFrom:
             fieldRef:

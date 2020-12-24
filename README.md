@@ -113,10 +113,7 @@ Installation via kubectl (only on the master node):
      
 ### MinIO
 
-    kubectl create -f minio/minio-volume.yaml
-    kubectl create -f minio/minio-pvc.yaml
-    kubectl create -f minio/minio-deployment.yaml
-    kubectl create -f minio/minio-service.yaml
+    kubectl apply -f minio/minio-arm.yaml
 
 ### Redis 
 
