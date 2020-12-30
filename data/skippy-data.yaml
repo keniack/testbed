@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skippy-data
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: skippy-data
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skippy-data
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: skippy-data
+subjects:
+- kind: ServiceAccount
+  name: skippy-data
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skippy-data
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skippy-data
+  template:
+    metadata:
+      labels:
+        app: skippy-data
+    spec:
+      serviceAccountName: skippy-data
+      nodeSelector:
+      containers:
+      - name: skippy-data
+        image: keniack/skippy-data-daemon:0.3
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5002
+        env:
+        - name: redis_host
+          value: 10.244.0.73
+        - name: MINIO_AC
+          value: "minio"
+        - name: MINIO_SC
+          value: "minio123"
+

@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skippy-scheduler
+  namespace: kube-system
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: kube-system
+  name: skippy-scheduler
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "endpoints"]
+  verbs: ["get", "watch", "list", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # "namespace" omitted since ClusterRoles are not namespaced
+  name: skippy-scheduler
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "endpoints"]
+  verbs: ["get", "watch", "list", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skippy-scheduler-role-binding2
+roleRef:
+  apiGroup: ""
+  kind: ClusterRole
+  name: skippy-scheduler
+subjects:
+- kind: ServiceAccount
+  name: skippy-scheduler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skippy-scheduler-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-scheduler
+subjects:
+- kind: ServiceAccount
+  name: skippy-scheduler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skippy-scheduler-volume-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:volume-scheduler
+subjects:
+- kind: ServiceAccount
+  name: my-scheduler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: skippy-scheduler-config-role-binding
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: skippy-scheduler
+  namespace: kube-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skippyd-scheduler
+  namespace: kube-system
+  labels:
+    app: skippyd-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skippyd-scheduler
+  template:
+    metadata:
+      labels:
+        app: skippyd-scheduler
+    spec:
+      # Make sure it's executed on the master node (necessary as file is mounted)
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      # Tolerate NoExecute taints
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+
+      # Set the service name
+      serviceAccountName: skippy-scheduler
+
+      containers:
+      - name: skippyd-scheduler
+        image: keniack/skippy-scheduler:0.3-armhf
+        # Use the TET optimized weights for the testbed preset
+        #args: ["--debug", "--weights", "[2.6923720489533647, 2.698796313141462, 5.964581321182787, 4.720991059190411, 9.122271417461349]"]
+        # Use the default scheduler
+        #args: ["--debug", "--use-default"]
+        args: ["--debug"]
+        env:
+          - name: MINIO_AC
+            value: "minio"
+          - name: MINIO_SC
+            value: "minio123"
+          - name: SKIPPY_NET_HOST
+            value: "10.244.0.97:5002"
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        ports:
+          - containerPort: 8080
