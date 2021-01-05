@@ -4,10 +4,10 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: "1"
     prometheus.io.scrape: "false"
-  creationTimestamp: "2020-12-30T14:16:47Z"
+  creationTimestamp: "2020-12-30T23:42:33Z"
   generation: 1
   labels:
-    faas_function: skipp-test
+    faas_function: skippy-test
   managedFields:
   - apiVersion: apps/v1
     fieldsType: FieldsV1
@@ -48,7 +48,7 @@ metadata:
             f:name: {}
           f:spec:
             f:containers:
-              k:{"name":"skipp-test"}:
+              k:{"name":"skippy-test"}:
                 .: {}
                 f:env:
                   .: {}
@@ -120,7 +120,7 @@ metadata:
             f:terminationGracePeriodSeconds: {}
     manager: faas-netes
     operation: Update
-    time: "2020-12-30T14:16:47Z"
+    time: "2020-12-30T23:42:33Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -153,19 +153,19 @@ metadata:
         f:updatedReplicas: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2020-12-30T14:16:56Z"
-  name: skipp-test
+    time: "2020-12-30T23:42:41Z"
+  name: skippy-test
   namespace: openfaas-fn
-  resourceVersion: "1906184"
-  selfLink: /apis/apps/v1/namespaces/openfaas-fn/deployments/skipp-test
-  uid: 7dea74ec-90cb-4f3a-bfc5-99c9c0176083
+  resourceVersion: "1988733"
+  selfLink: /apis/apps/v1/namespaces/openfaas-fn/deployments/skippy-test
+  uid: f60fd5ad-f48e-4806-b518-11c24bfbb876
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      faas_function: skipp-test
+      faas_function: skippy-test
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -177,12 +177,12 @@ spec:
         prometheus.io.scrape: "false"
       creationTimestamp: null
       labels:
-        faas_function: skipp-test
+        faas_function: skippy-test
         skippy.io.data.consume.0: b2-7.minio.csv
         skippy.io.data.consume.1: ananas.myfile.json
-        skippy.io.data.produce.0: myproduce1.skippy-file.txt
+        skippy.io.data.produce.0: myproduce1.skippy2-file.txt
         skippy.io.policy.capability: gpu
-      name: skipp-test
+      name: skippy-test
     spec:
       containers:
       - env:
@@ -196,7 +196,11 @@ spec:
           value: 10.107.29.82
         - name: write_debug
           value: "true"
-        image: keniack/skipp-test:latest
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: keniack/skippy-test:latest
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -208,7 +212,7 @@ spec:
           periodSeconds: 2
           successThreshold: 1
           timeoutSeconds: 1
-        name: skipp-test
+        name: skippy-test
         ports:
         - containerPort: 8080
           name: http
@@ -237,15 +241,15 @@ spec:
 status:
   availableReplicas: 1
   conditions:
-  - lastTransitionTime: "2020-12-30T14:16:56Z"
-    lastUpdateTime: "2020-12-30T14:16:56Z"
+  - lastTransitionTime: "2020-12-30T23:42:41Z"
+    lastUpdateTime: "2020-12-30T23:42:41Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2020-12-30T14:16:47Z"
-    lastUpdateTime: "2020-12-30T14:16:56Z"
-    message: ReplicaSet "skipp-test-7c8dfcbf4c" has successfully progressed.
+  - lastTransitionTime: "2020-12-30T23:42:33Z"
+    lastUpdateTime: "2020-12-30T23:42:41Z"
+    message: ReplicaSet "skippy-test-7589789785" has successfully progressed.
     reason: NewReplicaSetAvailable
     status: "True"
     type: Progressing

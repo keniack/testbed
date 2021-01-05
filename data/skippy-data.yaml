@@ -46,13 +46,13 @@ spec:
       nodeSelector:
       containers:
       - name: skippy-data
-        image: keniack/skippy-data-daemon:0.3
+        image: keniack/skippy-data-daemon:0.5
         imagePullPolicy: Always
         ports:
         - containerPort: 5002
         env:
         - name: redis_host
-          value: 10.244.0.73
+          value: 10.107.29.82
         - name: MINIO_AC
           value: "minio"
         - name: MINIO_SC

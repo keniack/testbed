@@ -22,7 +22,7 @@ spec:
         - containerPort: 5002
         env:
         - name: redis_host
-          value: 10.244.0.73
+          value: 10.107.29.82
         - name: registry_link
           value: "10"
         - name: cloud_link

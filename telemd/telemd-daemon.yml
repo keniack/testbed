@@ -28,7 +28,7 @@ spec:
             add: ["NET_ADMIN"]
         env:
         - name: telemd_redis_host
-          value: 10.244.0.73
+          value: 10.107.29.82
         - name: POD_NAME
           valueFrom:
             fieldRef:
